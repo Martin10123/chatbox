@@ -1,5 +1,7 @@
-import { BookOpen, Bot } from "lucide-react"
+import { BookOpen, Bot, User } from "lucide-react"
+import { Button } from "primereact/button"
 import { Card } from "primereact/card"
+import { InputText } from "primereact/inputtext"
 
 export const Chatbox = () => {
     return (
@@ -20,6 +22,22 @@ export const Chatbox = () => {
                             Practica oraciones en presente y pasado del verbo "TO BE"
                         </div>
                     </div>
+
+
+                    <div className="py-4 space-y-2">
+
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="username">¿Cual es tu nombre?</label>
+
+                        <div className="p-inputgroup flex-1">
+                            <span className="p-inputgroup-addon">
+                                <User />
+                            </span>
+
+                            <InputText id="username" placeholder="Ingresa tu nombre..." />
+                        </div>
+                    </div>
+
+                    <Button className="w-full" label="Guardar" outlined />
                 </div>
             </Card>
         </div>

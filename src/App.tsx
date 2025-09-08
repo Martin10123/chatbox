@@ -1,9 +1,9 @@
-import { Chatbox } from "./pages/Chatbox"
+import { Messages } from "./pages/Messages"
 
 function App() {
   return (
     <>
-      <Chatbox />
+      <Messages />
     </>
   )
 }
