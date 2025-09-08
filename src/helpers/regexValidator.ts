@@ -257,6 +257,16 @@ const validateSubjectVerbAgreement = (
     },
   ];
 
+  // Verificar puntuación requerida
+  const punctuationPatterns = [
+    // Oraciones afirmativas y negativas deben terminar con punto
+    {
+      pattern: /^(?!.*\?$).*[^.!?]$/i,
+      error:
+        "Missing punctuation. Affirmative and negative sentences must end with a period (.).",
+    },
+  ];
+
   // Verificar preguntas mal formadas
   const malformedQuestionPatterns = [
     // Preguntas que empiezan con pronombre en lugar de verbo
@@ -334,6 +344,16 @@ const validateSubjectVerbAgreement = (
 
   // Verificar patrones donde falta el sujeto
   for (const pattern of missingSubjectPatterns) {
+    if (pattern.pattern.test(sentence)) {
+      return {
+        isValid: false,
+        error: pattern.error,
+      };
+    }
+  }
+
+  // Verificar puntuación requerida
+  for (const pattern of punctuationPatterns) {
     if (pattern.pattern.test(sentence)) {
       return {
         isValid: false,
