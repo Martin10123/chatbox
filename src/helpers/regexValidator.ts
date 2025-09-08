@@ -95,12 +95,12 @@ const detectTense = (sentence: string): "present" | "past" | "unknown" => {
 };
 
 /**
- * Valida la estructura básica de la oración - solo verbo TO BE
+ * Valida la estructura básica de la oración - verbo TO BE + sujeto
  */
 const validateStructure = (
   sentence: string
 ): { isValid: boolean; error?: string } => {
-  // Solo verificar que contenga un verbo TO BE
+  // Verificar que contenga un verbo TO BE
   const hasVerb = Object.values(VERB_PATTERNS).some((pattern) =>
     pattern.test(sentence)
   );
@@ -109,38 +109,226 @@ const validateStructure = (
     return { isValid: false, error: "Missing verb TO BE" };
   }
 
+  // Verificar que tenga un sujeto (pronombres o sustantivos)
+  // Patrón más estricto para detectar sujetos válidos
+  const hasSubject =
+    // Patrón 1: Pronombre + verbo (I am, you are, etc.)
+    /\b(I|you|he|she|it|we|they)\s+(am|is|are|was|were|'m|'s|'re)\b/i.test(
+      sentence
+    ) ||
+    // Patrón 2: Verbo + pronombre (am I, are you, etc.) - para preguntas
+    /\b(am|is|are|was|were|'m|'s|'re)\s+(I|you|he|she|it|we|they)\b/i.test(
+      sentence
+    ) ||
+    // Patrón 3: Nombre propio + verbo (John is, Mary was, etc.)
+    /\b[A-Z][a-z]+\s+(am|is|are|was|were|'m|'s|'re)\b/i.test(sentence) ||
+    // Patrón 4: Verbo + nombre propio (is John, was Mary, etc.) - para preguntas
+    /\b(am|is|are|was|were|'m|'s|'re)\s+[A-Z][a-z]+\b/i.test(sentence) ||
+    // Patrón 5: Sustantivo plural + verbo (doctors are, students were, etc.)
+    /\b[a-z]+s\s+(am|is|are|was|were|'m|'s|'re)\b/i.test(sentence) ||
+    // Patrón 6: Verbo + sustantivo plural (are doctors, were students, etc.) - para preguntas
+    /\b(am|is|are|was|were|'m|'s|'re)\s+[a-z]+s\b/i.test(sentence);
+
+  if (!hasSubject) {
+    return {
+      isValid: false,
+      error:
+        "Missing subject. Please include a pronoun (I, you, he, she, it, we, they) or noun.",
+    };
+  }
+
   return { isValid: true };
 };
 
 /**
- * Valida la concordancia entre sujeto y verbo - versión simplificada
+ * Valida la concordancia entre sujeto y verbo - versión mejorada
  */
 const validateSubjectVerbAgreement = (
   sentence: string
 ): { isValid: boolean; error?: string } => {
-  // Solo verificar errores obvios de concordancia
-  const obviousErrors = [
-    { pattern: /\bi\s+is\b/i, error: "I + is is incorrect" },
-    { pattern: /\bi\s+are\b/i, error: "I + are is incorrect" },
-    { pattern: /\byou\s+is\b/i, error: "You + is is incorrect" },
-    { pattern: /\byou\s+am\b/i, error: "You + am is incorrect" },
-    { pattern: /\bhe\s+am\b/i, error: "He + am is incorrect" },
-    { pattern: /\bhe\s+are\b/i, error: "He + are is incorrect" },
-    { pattern: /\bshe\s+am\b/i, error: "She + am is incorrect" },
-    { pattern: /\bshe\s+are\b/i, error: "She + are is incorrect" },
-    { pattern: /\bit\s+am\b/i, error: "It + am is incorrect" },
-    { pattern: /\bit\s+are\b/i, error: "It + are is incorrect" },
-    { pattern: /\bwe\s+is\b/i, error: "We + is is incorrect" },
-    { pattern: /\bwe\s+am\b/i, error: "We + am is incorrect" },
-    { pattern: /\bthey\s+is\b/i, error: "They + is is incorrect" },
-    { pattern: /\bthey\s+am\b/i, error: "They + am is incorrect" },
+  // Errores de concordancia más específicos y detallados
+  const agreementErrors = [
+    // Errores con "I"
+    {
+      pattern: /\bi\s+is\b/i,
+      error: "I + is is incorrect. Use 'I am' instead.",
+    },
+    {
+      pattern: /\bi\s+are\b/i,
+      error: "I + are is incorrect. Use 'I am' instead.",
+    },
+
+    // Errores con "you" (singular y plural)
+    {
+      pattern: /\byou\s+is\b/i,
+      error: "You + is is incorrect. Use 'you are' instead.",
+    },
+    {
+      pattern: /\byou\s+am\b/i,
+      error: "You + am is incorrect. Use 'you are' instead.",
+    },
+
+    // Errores con "he"
+    {
+      pattern: /\bhe\s+am\b/i,
+      error: "He + am is incorrect. Use 'he is' instead.",
+    },
+    {
+      pattern: /\bhe\s+are\b/i,
+      error: "He + are is incorrect. Use 'he is' instead.",
+    },
+
+    // Errores con "she"
+    {
+      pattern: /\bshe\s+am\b/i,
+      error: "She + am is incorrect. Use 'she is' instead.",
+    },
+    {
+      pattern: /\bshe\s+are\b/i,
+      error: "She + are is incorrect. Use 'she is' instead.",
+    },
+
+    // Errores con "it"
+    {
+      pattern: /\bit\s+am\b/i,
+      error: "It + am is incorrect. Use 'it is' instead.",
+    },
+    {
+      pattern: /\bit\s+are\b/i,
+      error: "It + are is incorrect. Use 'it is' instead.",
+    },
+
+    // Errores con "we" (plural)
+    {
+      pattern: /\bwe\s+is\b/i,
+      error: "We + is is incorrect. Use 'we are' instead.",
+    },
+    {
+      pattern: /\bwe\s+am\b/i,
+      error: "We + am is incorrect. Use 'we are' instead.",
+    },
+
+    // Errores con "they" (plural)
+    {
+      pattern: /\bthey\s+is\b/i,
+      error: "They + is is incorrect. Use 'they are' instead.",
+    },
+    {
+      pattern: /\bthey\s+am\b/i,
+      error: "They + am is incorrect. Use 'they are' instead.",
+    },
+
+    // Errores con nombres propios y sustantivos singulares
+    {
+      pattern: /\b[A-Z][a-z]+\s+are\b/,
+      error: "Singular noun + are is incorrect. Use 'is' instead.",
+    },
+
+    // Errores con sustantivos plurales
+    {
+      pattern: /\b\w+s\s+is\b/i,
+      error: "Plural noun + is is incorrect. Use 'are' instead.",
+    },
   ];
 
-  for (const error of obviousErrors) {
+  // Verificar errores de concordancia
+  for (const error of agreementErrors) {
     if (error.pattern.test(sentence)) {
       return {
         isValid: false,
         error: error.error,
+      };
+    }
+  }
+
+  // Verificar patrones donde falta el sujeto después del verbo
+  const missingSubjectPatterns = [
+    // Patrones como "is a doctor?", "are doctors?", etc.
+    {
+      pattern: /\b(am|is|are|was|were|'m|'s|'re)\s+(a|an|the)\s+/i,
+      error:
+        "Missing subject. Please include a pronoun (I, you, he, she, it, we, they) or noun before the verb.",
+    },
+    {
+      pattern: /\b(am|is|are|was|were|'m|'s|'re)\s+[a-z]+\s*$/i,
+      error:
+        "Missing subject. Please include a pronoun (I, you, he, she, it, we, they) or noun before the verb.",
+    },
+  ];
+
+  // Verificar patrones específicos problemáticos
+  const problematicPatterns = [
+    // Patrones como "is we", "are I", etc.
+    {
+      pattern: /\bis\s+we\b/i,
+      error: "is + we is incorrect. Use 'are we' instead.",
+    },
+    {
+      pattern: /\bis\s+you\b/i,
+      error: "is + you is incorrect. Use 'are you' instead.",
+    },
+    {
+      pattern: /\bis\s+they\b/i,
+      error: "is + they is incorrect. Use 'are they' instead.",
+    },
+    {
+      pattern: /\bare\s+i\b/i,
+      error: "are + I is incorrect. Use 'am I' instead.",
+    },
+    {
+      pattern: /\bare\s+he\b/i,
+      error: "are + he is incorrect. Use 'is he' instead.",
+    },
+    {
+      pattern: /\bare\s+she\b/i,
+      error: "are + she is incorrect. Use 'is she' instead.",
+    },
+    {
+      pattern: /\bare\s+it\b/i,
+      error: "are + it is incorrect. Use 'is it' instead.",
+    },
+    // Patrones problemáticos adicionales
+    {
+      pattern: /\bare\s+is\b/i,
+      error: "are + is is incorrect. Use 'is' or 'are' consistently.",
+    },
+    {
+      pattern: /\bis\s+are\b/i,
+      error: "is + are is incorrect. Use 'is' or 'are' consistently.",
+    },
+    {
+      pattern: /\bam\s+is\b/i,
+      error: "am + is is incorrect. Use 'am' or 'is' consistently.",
+    },
+    {
+      pattern: /\bam\s+are\b/i,
+      error: "am + are is incorrect. Use 'am' or 'are' consistently.",
+    },
+    {
+      pattern: /\bwas\s+are\b/i,
+      error: "was + are is incorrect. Use 'was' or 'were' consistently.",
+    },
+    {
+      pattern: /\bwere\s+is\b/i,
+      error: "were + is is incorrect. Use 'was' or 'were' consistently.",
+    },
+  ];
+
+  // Verificar patrones donde falta el sujeto
+  for (const pattern of missingSubjectPatterns) {
+    if (pattern.pattern.test(sentence)) {
+      return {
+        isValid: false,
+        error: pattern.error,
+      };
+    }
+  }
+
+  for (const pattern of problematicPatterns) {
+    if (pattern.pattern.test(sentence)) {
+      return {
+        isValid: false,
+        error: pattern.error,
       };
     }
   }
@@ -160,12 +348,18 @@ const generateFeedback = (
 ): string => {
   if (!isValid) {
     if (structureValidation.error === "Missing verb TO BE") {
-      return "❌ Invalid sentence. Missing verb TO BE.";
+      return "❌ Invalid sentence. Missing verb TO BE. Please use am, is, are, was, or were.";
+    }
+    if (
+      structureValidation.error ===
+      "Missing subject. Please include a pronoun (I, you, he, she, it, we, they) or noun."
+    ) {
+      return "❌ Invalid sentence. Missing subject. Please include a pronoun (I, you, he, she, it, we, they) or noun.";
     }
     if (agreementValidation.error) {
-      return "❌ Invalid sentence. Subject-verb agreement error.";
+      return `❌ ${agreementValidation.error}`;
     }
-    return "❌ Invalid sentence.";
+    return "❌ Invalid sentence. Please check your grammar.";
   }
 
   // Generar feedback positivo
@@ -177,7 +371,7 @@ const generateFeedback = (
       ? "negative"
       : "question";
 
-  return `✅ Correct sentence in ${tenseText} ${typeText}.`;
+  return `✅ Correct sentence in ${tenseText} ${typeText}! Great job!`;
 };
 
 /**

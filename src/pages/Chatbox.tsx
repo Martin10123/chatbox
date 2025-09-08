@@ -2,8 +2,26 @@ import { BookOpen, Bot, User } from "lucide-react"
 import { Button } from "primereact/button"
 import { Card } from "primereact/card"
 import { InputText } from "primereact/inputtext"
+import { useState } from "react"
 
-export const Chatbox = () => {
+interface ChatboxProps {
+    onNameSubmit: (name: string) => void
+}
+
+export const Chatbox = ({ onNameSubmit }: ChatboxProps) => {
+    const [userName, setUserName] = useState('')
+
+    const handleSubmit = () => {
+        if (userName.trim()) {
+            onNameSubmit(userName.trim())
+        }
+    }
+
+    const handleKeyPress = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            handleSubmit()
+        }
+    }
     return (
         <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
             <Card className="w-full max-w-md mx-auto shadow-md border border-gray-200 bg-white">
@@ -33,11 +51,23 @@ export const Chatbox = () => {
                                 <User />
                             </span>
 
-                            <InputText id="username" placeholder="Ingresa tu nombre..." />
+                            <InputText
+                                id="username"
+                                placeholder="Ingresa tu nombre..."
+                                value={userName}
+                                onChange={(e) => setUserName(e.target.value)}
+                                onKeyPress={handleKeyPress}
+                            />
                         </div>
                     </div>
 
-                    <Button className="w-full" label="Guardar" outlined />
+                    <Button
+                        className="w-full"
+                        label="Guardar"
+                        outlined
+                        onClick={handleSubmit}
+                        disabled={!userName.trim()}
+                    />
                 </div>
             </Card>
         </div>
