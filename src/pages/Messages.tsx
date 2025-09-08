@@ -1,4 +1,4 @@
-import { Bot, Send, Plus, MessageSquare, Trash2, Settings } from 'lucide-react'
+import { Bot, Send, Plus, MessageSquare, Trash2, Settings, User } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import { validateSentence } from '../helpers/regexValidator'
 import type { ValidationResult } from '../helpers/regexValidator'
@@ -297,7 +297,9 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
                             </div>
                             {!message.isBot && (
                                 <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <span className="text-white text-xs font-medium">U</span>
+                                    <span className="text-white text-xs font-medium">
+                                        <User className="w-4 h-4" />
+                                    </span>
                                 </div>
                             )}
                         </div>

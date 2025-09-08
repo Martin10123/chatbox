@@ -249,10 +249,28 @@ const validateSubjectVerbAgreement = (
       error:
         "Missing subject. Please include a pronoun (I, you, he, she, it, we, they) or noun before the verb.",
     },
+    // Solo detectar cuando el verbo está al inicio de la oración (sin sujeto antes)
     {
-      pattern: /\b(am|is|are|was|were|'m|'s|'re)\s+[a-z]+\s*$/i,
+      pattern: /^(am|is|are|was|were|'m|'s|'re)\s+[a-z]+\s*$/i,
       error:
         "Missing subject. Please include a pronoun (I, you, he, she, it, we, they) or noun before the verb.",
+    },
+  ];
+
+  // Verificar preguntas mal formadas
+  const malformedQuestionPatterns = [
+    // Preguntas que empiezan con pronombre en lugar de verbo
+    {
+      pattern:
+        /^(I|you|he|she|it|we|they)\s+(am|is|are|was|were|'m|'s|'re)\s+.*\?$/i,
+      error:
+        "Incorrect question structure. Questions should start with the verb (Am I, Are you, Is he, etc.).",
+    },
+    // Preguntas que empiezan con nombre propio en lugar de verbo
+    {
+      pattern: /^[A-Z][a-z]+\s+(am|is|are|was|were|'m|'s|'re)\s+.*\?$/i,
+      error:
+        "Incorrect question structure. Questions should start with the verb (Is John, Are Mary, etc.).",
     },
   ];
 
@@ -316,6 +334,16 @@ const validateSubjectVerbAgreement = (
 
   // Verificar patrones donde falta el sujeto
   for (const pattern of missingSubjectPatterns) {
+    if (pattern.pattern.test(sentence)) {
+      return {
+        isValid: false,
+        error: pattern.error,
+      };
+    }
+  }
+
+  // Verificar preguntas mal formadas
+  for (const pattern of malformedQuestionPatterns) {
     if (pattern.pattern.test(sentence)) {
       return {
         isValid: false,
