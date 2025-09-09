@@ -1,7 +1,4 @@
-import { BookOpen, Bot, User } from "lucide-react"
-import { Button } from "primereact/button"
-import { Card } from "primereact/card"
-import { InputText } from "primereact/inputtext"
+import { BookOpen, Bot, User, Sparkles, Zap } from "lucide-react"
 import { useState } from "react"
 
 interface ChatboxProps {
@@ -10,10 +7,14 @@ interface ChatboxProps {
 
 export const Chatbox = ({ onNameSubmit }: ChatboxProps) => {
     const [userName, setUserName] = useState('')
+    const [isAnimating, setIsAnimating] = useState(false)
 
     const handleSubmit = () => {
         if (userName.trim()) {
-            onNameSubmit(userName.trim())
+            setIsAnimating(true)
+            setTimeout(() => {
+                onNameSubmit(userName.trim())
+            }, 500)
         }
     }
 
@@ -22,54 +23,98 @@ export const Chatbox = ({ onNameSubmit }: ChatboxProps) => {
             handleSubmit()
         }
     }
+
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
-            <Card className="w-full max-w-md mx-auto shadow-md border border-gray-200 bg-white">
+        <div className="min-h-screen animated-bg flex items-center justify-center p-4 relative">
+            {/* Floating Particles */}
+            <div className="floating-particles">
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+            </div>
+
+            <div className={`w-full max-w-md mx-auto glass-dark rounded-2xl p-8 hover-lift transition-all duration-500 ${isAnimating ? 'scale-105 opacity-90' : ''}`}>
                 <div className="text-center pb-6">
-                    <div className="mx-auto mb-4 w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center">
-                        <Bot className="w-10 h-10 text-gray-600" />
+                    <div className="mx-auto mb-6 w-24 h-24 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-full flex items-center justify-center pulse-glow relative">
+                        <Bot className="w-12 h-12 text-white" />
+                        <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                            <Sparkles className="w-3 h-3 text-yellow-800" />
+                        </div>
                     </div>
-                    <h1 className="text-2xl font-medium text-gray-900 mb-2">Hello!</h1>
-                    <p className="text-gray-600 text-balance">Mi nombre es EduBot. <br />¿Cómo te llamas?</p>
+                    <h1 className="text-3xl font-bold mb-3 bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+                        Welcome, Champion!
+                    </h1>
+                    <p className="text-gray-300 text-lg leading-relaxed">
+                        I'm <span className="text-cyan-400 font-semibold">EduBot</span>, your English learning companion.<br />
+                        What's your name, warrior?
+                    </p>
                 </div>
 
-                <div>
-                    <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-100">
-                        <BookOpen className="w-5 h-5 text-gray-500" />
-                        <div className="text-sm text-gray-700">
-                            Practica oraciones en presente y pasado del verbo "TO BE"
+                <div className="space-y-6">
+                    <div className="flex items-center gap-4 p-4 glass rounded-xl border border-cyan-400/20 hover-glow">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center">
+                            <BookOpen className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="text-sm text-gray-200">
+                            <span className="text-cyan-400 font-semibold">Mission:</span> Master the verb "TO BE" in present and past tense
                         </div>
                     </div>
 
+                    <div className="space-y-4">
+                        <label className="block text-sm font-semibold text-gray-200" htmlFor="username">
+                            Enter your name, hero:
+                        </label>
 
-                    <div className="py-4 space-y-2">
-
-                        <label className="block text-sm font-medium text-gray-700" htmlFor="username">¿Cual es tu nombre?</label>
-
-                        <div className="p-inputgroup flex-1">
-                            <span className="p-inputgroup-addon">
-                                <User />
-                            </span>
-
-                            <InputText
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <User className="w-5 h-5 text-cyan-400" />
+                            </div>
+                            <input
                                 id="username"
-                                placeholder="Ingresa tu nombre..."
+                                type="text"
+                                placeholder="Type your name here..."
                                 value={userName}
                                 onChange={(e) => setUserName(e.target.value)}
                                 onKeyPress={handleKeyPress}
+                                className="w-full pl-12 pr-4 py-4 bg-white/10 border border-cyan-400/30 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-300 hover:bg-white/15"
                             />
                         </div>
                     </div>
 
-                    <Button
-                        className="w-full"
-                        label="Guardar"
-                        outlined
+                    <button
                         onClick={handleSubmit}
-                        disabled={!userName.trim()}
-                    />
+                        disabled={!userName.trim() || isAnimating}
+                        className={`w-full py-4 px-6 rounded-xl font-semibold text-white transition-all duration-300 flex items-center justify-center gap-2 ${userName.trim() && !isAnimating
+                                ? 'btn-primary hover:scale-105 active:scale-95'
+                                : 'bg-gray-600 cursor-not-allowed opacity-50'
+                            }`}
+                    >
+                        {isAnimating ? (
+                            <>
+                                <div className="spinner"></div>
+                                <span>Launching...</span>
+                            </>
+                        ) : (
+                            <>
+                                <Zap className="w-5 h-5" />
+                                <span>Start Learning</span>
+                            </>
+                        )}
+                    </button>
                 </div>
-            </Card>
+
+                <div className="mt-8 text-center">
+                    <p className="text-xs text-gray-400">
+                        Ready to become an English master? Let's do this! 🚀
+                    </p>
+                </div>
+            </div>
         </div>
     )
 }

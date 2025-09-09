@@ -1,4 +1,4 @@
-import { Bot, Send, Plus, MessageSquare, Trash2, LogOut, User } from 'lucide-react'
+import { Bot, Send, Plus, MessageSquare, Trash2, LogOut, User, Sparkles, Star, Crown } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import { validateToBeSentence, getFeedbackMessage } from '../helpers/regexValidator'
 import type { ValidationResult } from '../helpers/regexValidator'
@@ -23,11 +23,11 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
     const [conversations, setConversations] = useState<Conversation[]>([
         {
             id: '1',
-            title: 'Verb "TO BE" Practice',
+            title: 'English Mastery Quest',
             messages: [
                 {
                     id: '1',
-                    text: `Nice to meet you, ${userName}! Please type a sentence in English using the verb TO BE (present or past).`,
+                    text: `Welcome to the arena, ${userName}! 🏆 Ready to conquer the verb TO BE? Type a sentence using TO BE in present or past tense, champion!`,
                     isBot: true,
                     timestamp: new Date()
                 }
@@ -63,11 +63,11 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
         const newId = Date.now().toString()
         const newConversation: Conversation = {
             id: newId,
-            title: 'New Conversation',
+            title: 'New Battle Arena',
             messages: [
                 {
                     id: '1',
-                    text: `Hello ${userName}! I'm EduBot. Please type a sentence in English using the verb TO BE (present or past).`,
+                    text: `New quest begins, ${userName}! ⚔️ I'm EduBot, your English training partner. Let's master the verb TO BE together!`,
                     isBot: true,
                     timestamp: new Date()
                 }
@@ -132,9 +132,9 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
         let botResponseText = getFeedbackMessage(validationResult)
 
         if (validationResult.isValid) {
-            botResponseText += "\n\nGreat! Try another sentence with the verb TO BE."
+            botResponseText += "\n\n🎉 Excellent work, warrior! You're getting stronger! Try another sentence with the verb TO BE to level up!"
         } else {
-            botResponseText += "\n\nTry again with a sentence using the verb TO BE in present or past tense."
+            botResponseText += "\n\n💪 Don't give up, champion! Every master was once a beginner. Try again with a sentence using the verb TO BE in present or past tense."
         }
 
         const botResponse = {
@@ -170,7 +170,19 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 flex relative">
+        <div className="min-h-screen animated-bg flex relative">
+            {/* Floating Particles */}
+            <div className="floating-particles">
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+                <div className="particle"></div>
+            </div>
             {showConversations && (
                 <div
                     className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
@@ -178,13 +190,16 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
                 />
             )}
 
-            <div className={`${showConversations ? 'block' : 'hidden'} md:flex md:flex-col w-80 bg-white border-r border-gray-200 flex-shrink-0 z-50 md:sticky md:top-0 md:h-screen`}>
-                <div className="p-4 border-b border-gray-200 flex-shrink-0">
+            <div className={`${showConversations ? 'block' : 'hidden'} md:flex md:flex-col w-80 glass-dark border-r border-cyan-400/20 flex-shrink-0 z-50 md:sticky md:top-0 md:h-screen`}>
+                <div className="p-4 border-b border-cyan-400/20 flex-shrink-0">
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-lg font-semibold text-gray-900">Conversations</h2>
+                        <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+                            <Crown className="w-5 h-5 text-yellow-400" />
+                            Battle Logs
+                        </h2>
                         <button
                             onClick={createNewConversation}
-                            className="w-8 h-8 bg-blue-500 cursor-pointer text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
+                            className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 cursor-pointer text-white rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 shadow-lg"
                         >
                             <Plus className="w-4 h-4" />
                         </button>
@@ -195,7 +210,7 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
                     {conversations.map((conversation) => (
                         <div
                             key={conversation.id}
-                            className={`w-full text-left p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors ${currentConversationId === conversation.id ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
+                            className={`w-full text-left p-4 border-b border-cyan-400/10 hover:bg-white/5 transition-all duration-300 hover:scale-105 ${currentConversationId === conversation.id ? 'bg-cyan-400/20 border-l-4 border-l-cyan-400 pulse-glow' : ''
                                 }`}
                         >
                             <div className="flex items-center gap-3">
@@ -206,10 +221,10 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
                                     }}
                                     className="flex items-center gap-3 flex-1 min-w-0"
                                 >
-                                    <MessageSquare className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                                    <MessageSquare className="w-4 h-4 text-cyan-400 flex-shrink-0" />
                                     <div className="min-w-0 flex-1">
-                                        <p className="text-sm font-medium text-gray-900 truncate">{conversation.title}</p>
-                                        <p className="text-xs text-gray-500 truncate">
+                                        <p className="text-sm font-medium text-white truncate">{conversation.title}</p>
+                                        <p className="text-xs text-gray-300 truncate">
                                             {conversation.messages[conversation.messages.length - 1]?.text || 'No messages'}
                                         </p>
                                     </div>
@@ -219,7 +234,7 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
                                         e.stopPropagation()
                                         deleteConversation(conversation.id)
                                     }}
-                                    className="w-6 h-6 text-gray-400 hover:text-red-500 cursor-pointer transition-colors flex-shrink-0"
+                                    className="w-6 h-6 text-gray-400 hover:text-red-400 cursor-pointer transition-all duration-300 hover:scale-110 flex-shrink-0"
                                     title="Delete conversation"
                                 >
                                     <Trash2 className="w-4 h-4" />
@@ -230,35 +245,41 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
                 </div>
             </div>
 
-            <div className="flex-1 flex flex-col md:max-w-md md:mx-auto md:my-4 md:rounded-2xl md:shadow-lg overflow-hidden bg-white h-screen md:h-auto md:max-h-[calc(100vh-2rem)]">
-                <div className="bg-white px-4 py-4 border-b border-gray-200">
+            <div className="flex-1 flex flex-col md:max-w-md md:mx-auto md:my-4 md:rounded-2xl overflow-hidden glass-dark h-screen md:h-auto md:max-h-[calc(100vh-2rem)]">
+                <div className="glass px-4 py-4 border-b border-cyan-400/20">
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setShowConversations(!showConversations)}
-                            className="md:hidden w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors"
+                            className="md:hidden w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-all duration-300 hover:scale-110"
                         >
-                            <MessageSquare className="w-4 h-4 text-gray-600" />
+                            <MessageSquare className="w-4 h-4 text-cyan-400" />
                         </button>
 
-                        <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                            <Bot className="w-5 h-5 text-gray-600" />
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-full flex items-center justify-center pulse-glow relative">
+                            <Bot className="w-6 h-6 text-white" />
+                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center">
+                                <Star className="w-2 h-2 text-yellow-800" />
+                            </div>
                         </div>
                         <div className="flex-1">
-                            <h2 className="text-lg font-semibold text-gray-900">EduBot</h2>
-                            <p className="text-sm text-gray-500">{currentConversation?.title || 'Verb "TO BE" Practice'}</p>
+                            <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+                                <span className="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">EduBot</span>
+                                <Sparkles className="w-4 h-4 text-yellow-400" />
+                            </h2>
+                            <p className="text-sm text-gray-300">{currentConversation?.title || 'English Mastery Quest'}</p>
                         </div>
 
                         <button
                             onClick={handleLogout}
-                            className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-200 transition-colors mr-2"
+                            className="w-8 h-8 bg-red-500/30 hover:bg-red-500/50 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 mr-2 border border-red-400/30"
                             title="Logout and clear all conversations"
                         >
-                            <LogOut className="w-4 h-4 text-red-600" />
+                            <LogOut className="w-4 h-4 text-red-300" />
                         </button>
 
                         <button
                             onClick={createNewConversation}
-                            className="md:hidden w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
+                            className="md:hidden w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 shadow-lg"
                         >
                             <Plus className="w-4 h-4" />
                         </button>
@@ -266,44 +287,42 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
                 </div>
 
                 <div className="flex-1 p-4 space-y-4 overflow-y-auto min-h-0" ref={messagesContainerRef}>
-                    {currentConversation?.messages.map((message) => (
-                        <div key={message.id} className={`flex items-start gap-3 ${message.isBot ? '' : 'flex-row-reverse'}`}>
+                    {currentConversation?.messages.map((message, index) => (
+                        <div key={message.id} className={`flex items-start gap-3 message-enter ${message.isBot ? '' : 'flex-row-reverse'}`} style={{ animationDelay: `${index * 0.1}s` }}>
                             {message.isBot && (
-                                <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <Bot className="w-4 h-4 text-gray-600" />
+                                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-full flex items-center justify-center flex-shrink-0 pulse-glow">
+                                    <Bot className="w-5 h-5 text-white" />
                                 </div>
                             )}
-                            <div className={`rounded-2xl px-4 py-3 max-w-[80%] ${message.isBot
-                                ? 'bg-gray-100 rounded-tl-sm'
-                                : 'bg-blue-500 text-white rounded-tr-sm'
+                            <div className={`rounded-2xl px-4 py-3 max-w-[80%] transition-all duration-300 hover:scale-105 ${message.isBot
+                                ? 'glass rounded-tl-sm border border-cyan-400/20'
+                                : 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white rounded-tr-sm shadow-lg'
                                 }`}>
-                                <p className={`text-sm leading-relaxed ${message.isBot ? 'text-gray-800' : 'text-white'
+                                <p className={`text-sm leading-relaxed ${message.isBot ? 'text-white' : 'text-white'
                                     }`}>
                                     {message.text}
                                 </p>
                             </div>
                             {!message.isBot && (
-                                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <span className="text-white text-xs font-medium">
-                                        <User className="w-4 h-4" />
-                                    </span>
+                                <div className="w-10 h-10 bg-gradient-to-br from-gray-600 to-gray-700 rounded-full flex items-center justify-center flex-shrink-0 hover:scale-110 transition-all duration-300">
+                                    <User className="w-5 h-5 text-white" />
                                 </div>
                             )}
                         </div>
                     ))}
 
                     {isLoading && (
-                        <div className="flex items-start gap-3">
-                            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
-                                <Bot className="w-4 h-4 text-gray-600" />
+                        <div className="flex items-start gap-3 message-bounce">
+                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-full flex items-center justify-center flex-shrink-0 pulse-glow">
+                                <Bot className="w-5 h-5 text-white" />
                             </div>
-                            <div className="rounded-2xl px-4 py-3 bg-gray-100 rounded-tl-sm">
-                                <div className="flex items-center space-x-1">
-                                    <span className="text-gray-600 text-sm">EduBot is thinking</span>
-                                    <div className="flex space-x-1">
-                                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                            <div className="rounded-2xl px-4 py-3 glass rounded-tl-sm border border-cyan-400/20">
+                                <div className="flex items-center space-x-2">
+                                    <span className="text-white text-sm font-medium">EduBot is analyzing...</span>
+                                    <div className="typing-indicator">
+                                        <div className="typing-dot"></div>
+                                        <div className="typing-dot"></div>
+                                        <div className="typing-dot"></div>
                                     </div>
                                 </div>
                             </div>
@@ -312,8 +331,9 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
 
                     <div ref={messagesEndRef} />
                 </div>
+                {isLoading}
 
-                <div className="bg-white border-t border-gray-200 p-4">
+                <div className="glass border-t border-cyan-400/20 p-4">
                     <div className="flex items-center gap-3">
                         <div className="flex-1 relative">
                             <input
@@ -322,17 +342,24 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
                                 value={newMessage}
                                 onChange={(e) => setNewMessage(e.target.value)}
                                 onKeyPress={handleKeyPress}
-                                placeholder="Write a sentence with 'TO BE'..."
+                                placeholder="Type your TO BE sentence here, champion..."
                                 disabled={isLoading}
-                                className="w-full px-4 py-3 pr-12 bg-gray-50 border border-gray-200 rounded-full text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full px-4 py-3 pr-12 bg-white/15 border border-cyan-400/50 rounded-full text-sm text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 focus:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:bg-white/20"
                             />
                         </div>
                         <button
                             onClick={sendMessage}
                             disabled={!newMessage.trim() || isLoading}
-                            className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${newMessage.trim() && !isLoading
+                                ? 'btn-primary hover:scale-110 active:scale-95'
+                                : 'bg-gray-600 cursor-not-allowed opacity-50'
+                                }`}
                         >
-                            <Send className="w-4 h-4 text-gray-600 cursor-pointer" />
+                            {isLoading ? (
+                                <div className="spinner"></div>
+                            ) : (
+                                <Send className="w-5 h-5 text-white" />
+                            )}
                         </button>
                     </div>
                 </div>
