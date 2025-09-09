@@ -1,6 +1,6 @@
-import { Bot, Send, Plus, MessageSquare, Trash2, Settings, User } from 'lucide-react'
+import { Bot, Send, Plus, MessageSquare, Trash2, LogOut, User } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
-import { validateSentence } from '../helpers/regexValidator'
+import { validateToBeSentence, getFeedbackMessage } from '../helpers/regexValidator'
 import type { ValidationResult } from '../helpers/regexValidator'
 
 interface Conversation {
@@ -45,19 +45,16 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
 
     const currentConversation = conversations.find(c => c.id === currentConversationId)
 
-    // Función para hacer scroll al final de los mensajes
     const scrollToBottom = () => {
         if (messagesContainerRef.current) {
             messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
         }
     }
 
-    // Hacer scroll cuando cambien los mensajes o el estado de loading
     useEffect(() => {
         scrollToBottom()
     }, [currentConversation?.messages, isLoading])
 
-    // Hacer scroll cuando cambie la conversación actual
     useEffect(() => {
         scrollToBottom()
     }, [currentConversationId])
@@ -85,15 +82,20 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
         const updatedConversations = conversations.filter(conv => conv.id !== conversationId)
         setConversations(updatedConversations)
 
-        // Si eliminamos la conversación actual, cambiar a la primera disponible
         if (conversationId === currentConversationId) {
             if (updatedConversations.length > 0) {
                 setCurrentConversationId(updatedConversations[0].id)
             } else {
-                // Si no hay conversaciones, crear una nueva
                 createNewConversation()
             }
         }
+    }
+
+    const handleLogout = () => {
+        setConversations([])
+        setCurrentConversationId('')
+
+        onNameChange()
     }
 
     const sendMessage = async () => {
@@ -106,7 +108,6 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
             timestamp: new Date()
         }
 
-        // Agregar mensaje del usuario inmediatamente
         setConversations(conversations.map(conv =>
             conv.id === currentConversationId
                 ? {
@@ -121,20 +122,15 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
         setNewMessage('')
         setIsLoading(true)
 
-        // Calcular tiempo de loading basado en la longitud del mensaje
         const messageLength = messageToSend.length
         const loadingTime = messageLength > 50 ? Math.random() * 2000 + 4000 : Math.random() * 1000 + 2000
 
-        // Simular tiempo de procesamiento
         await new Promise(resolve => setTimeout(resolve, loadingTime))
 
-        // Validar la frase usando expresiones regulares
-        const validationResult: ValidationResult = validateSentence(messageToSend)
+        const validationResult: ValidationResult = validateToBeSentence(messageToSend)
 
-        // Generar respuesta del bot basada en la validación
-        let botResponseText = validationResult.feedback
+        let botResponseText = getFeedbackMessage(validationResult)
 
-        // Agregar sugerencia para continuar
         if (validationResult.isValid) {
             botResponseText += "\n\nGreat! Try another sentence with the verb TO BE."
         } else {
@@ -160,7 +156,6 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
 
         setIsLoading(false)
 
-        // Hacer scroll al final y focus al input después de enviar
         setTimeout(() => {
             scrollToBottom()
             inputRef.current?.focus()
@@ -176,7 +171,6 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
 
     return (
         <div className="min-h-screen bg-gray-100 flex relative">
-            {/* Mobile overlay */}
             {showConversations && (
                 <div
                     className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
@@ -184,14 +178,13 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
                 />
             )}
 
-            {/* Conversations Sidebar - Hidden on mobile, visible on desktop */}
             <div className={`${showConversations ? 'block' : 'hidden'} md:flex md:flex-col w-80 bg-white border-r border-gray-200 flex-shrink-0 z-50 md:sticky md:top-0 md:h-screen`}>
                 <div className="p-4 border-b border-gray-200 flex-shrink-0">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-lg font-semibold text-gray-900">Conversations</h2>
                         <button
                             onClick={createNewConversation}
-                            className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
+                            className="w-8 h-8 bg-blue-500 cursor-pointer text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
                         >
                             <Plus className="w-4 h-4" />
                         </button>
@@ -226,7 +219,7 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
                                         e.stopPropagation()
                                         deleteConversation(conversation.id)
                                     }}
-                                    className="w-6 h-6 text-gray-400 hover:text-red-500 transition-colors flex-shrink-0"
+                                    className="w-6 h-6 text-gray-400 hover:text-red-500 cursor-pointer transition-colors flex-shrink-0"
                                     title="Delete conversation"
                                 >
                                     <Trash2 className="w-4 h-4" />
@@ -237,12 +230,9 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
                 </div>
             </div>
 
-            {/* Chat Container */}
             <div className="flex-1 flex flex-col md:max-w-md md:mx-auto md:my-4 md:rounded-2xl md:shadow-lg overflow-hidden bg-white h-screen md:h-auto md:max-h-[calc(100vh-2rem)]">
-                {/* Header */}
                 <div className="bg-white px-4 py-4 border-b border-gray-200">
                     <div className="flex items-center gap-3">
-                        {/* Mobile menu button */}
                         <button
                             onClick={() => setShowConversations(!showConversations)}
                             className="md:hidden w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors"
@@ -258,16 +248,14 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
                             <p className="text-sm text-gray-500">{currentConversation?.title || 'Verb "TO BE" Practice'}</p>
                         </div>
 
-                        {/* Settings button */}
                         <button
-                            onClick={onNameChange}
-                            className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors mr-2"
-                            title="Change name"
+                            onClick={handleLogout}
+                            className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-200 transition-colors mr-2"
+                            title="Logout and clear all conversations"
                         >
-                            <Settings className="w-4 h-4 text-gray-600" />
+                            <LogOut className="w-4 h-4 text-red-600" />
                         </button>
 
-                        {/* New chat button for mobile */}
                         <button
                             onClick={createNewConversation}
                             className="md:hidden w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
@@ -277,7 +265,6 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
                     </div>
                 </div>
 
-                {/* Messages Area */}
                 <div className="flex-1 p-4 space-y-4 overflow-y-auto min-h-0" ref={messagesContainerRef}>
                     {currentConversation?.messages.map((message) => (
                         <div key={message.id} className={`flex items-start gap-3 ${message.isBot ? '' : 'flex-row-reverse'}`}>
@@ -305,7 +292,6 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
                         </div>
                     ))}
 
-                    {/* Loading indicator */}
                     {isLoading && (
                         <div className="flex items-start gap-3">
                             <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
@@ -324,11 +310,9 @@ export const Messages = ({ userName, onNameChange }: MessagesProps) => {
                         </div>
                     )}
 
-                    {/* Elemento invisible para hacer scroll */}
                     <div ref={messagesEndRef} />
                 </div>
 
-                {/* Input Section */}
                 <div className="bg-white border-t border-gray-200 p-4">
                     <div className="flex items-center gap-3">
                         <div className="flex-1 relative">
