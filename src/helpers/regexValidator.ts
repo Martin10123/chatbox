@@ -170,6 +170,15 @@ export function validateToBeSentence(sentence: string): ValidationResult {
     return { isValid: false, error: "Empty sentence" };
   }
 
+  // Validar que la primera letra sea mayúscula
+  const firstChar = cleanSentence.charAt(0);
+  if (!/[A-Z]/.test(firstChar)) {
+    return {
+      isValid: false,
+      error: "The first letter of the sentence must be capitalized. Please start your sentence with a capital letter."
+    };
+  }
+
   // Verificar si es una pregunta
   const isQuestion = cleanSentence.endsWith("?");
   const isAffirmativeOrNegative = cleanSentence.endsWith(".");

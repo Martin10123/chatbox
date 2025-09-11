@@ -225,6 +225,8 @@ graph TD
 "am happy"           // Falta sujeto
 "The cat brown"      // Falta verbo
 "is a teacher"       // Falta sujeto
+"i am a teacher"     // Primera letra no mayúscula
+"the cat is brown"   // Primera letra no mayúscula
 ```
 
 ## 🔍 Expresiones Regulares Implementadas

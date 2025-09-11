@@ -203,6 +203,8 @@ const testSentences = [
   "is a teacher.",             // Sin sujeto
   "Are you ready?",            // Pregunta válida
   "You am tall.",              // Error de concordancia
+  "i am a teacher.",           // Primera letra no mayúscula
+  "the cat is brown.",         // Primera letra no mayúscula
 ];
 
 testSentences.forEach(sentence => {
@@ -238,6 +240,34 @@ testSentences.forEach(sentence => {
 - **Presente**: `are`
 - **Pasado**: `were`
 - **Ejemplos**: "They are students.", "The cats are brown."
+
+## Validación de Capitalización
+
+### Regla de Primera Letra Mayúscula
+
+El sistema valida que todas las oraciones comiencen con una letra mayúscula, siguiendo las reglas gramaticales del inglés.
+
+**Patrón de Validación**:
+```typescript
+const firstChar = cleanSentence.charAt(0);
+if (!/[A-Z]/.test(firstChar)) {
+  return {
+    isValid: false,
+    error: "The first letter of the sentence must be capitalized. Please start your sentence with a capital letter."
+  };
+}
+```
+
+**Ejemplos**:
+
+| Frase | Resultado | Razón |
+|-------|-----------|-------|
+| "I am a teacher." | ✅ Válido | Primera letra mayúscula |
+| "The cat is brown." | ✅ Válido | Primera letra mayúscula |
+| "Are you ready?" | ✅ Válido | Primera letra mayúscula |
+| "i am a teacher." | ❌ Inválido | Primera letra minúscula |
+| "the cat is brown." | ❌ Inválido | Primera letra minúscula |
+| "are you ready?" | ❌ Inválido | Primera letra minúscula |
 
 ## Consideraciones de Rendimiento
 
