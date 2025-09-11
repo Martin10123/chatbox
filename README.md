@@ -40,6 +40,7 @@
 ### Características Principales
 
 - ✅ **Validación en Tiempo Real**: Análisis instantáneo de frases gramaticales
+- ✅ **Validación de Capitalización**: Verificación de primera letra mayúscula
 - ✅ **Múltiples Conversaciones**: Gestión de sesiones simultáneas
 - ✅ **Interfaz Intuitiva**: Diseño moderno con efectos visuales
 - ✅ **Retroalimentación Específica**: Mensajes detallados de error y éxito

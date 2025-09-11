@@ -180,6 +180,21 @@
 | TC092 | "You are tall" | ❌ Error: Missing punctuation | ✅ |
 | TC093 | "He is happy" | ❌ Error: Missing punctuation | ✅ |
 
+#### Errores de Capitalización
+
+| ID | Frase de Prueba | Resultado Esperado | Estado |
+|----|-----------------|-------------------|---------|
+| TC099 | "i am a teacher." | ❌ Error: First letter must be capitalized | ✅ |
+| TC100 | "the cat is brown." | ❌ Error: First letter must be capitalized | ✅ |
+| TC101 | "you are tall." | ❌ Error: First letter must be capitalized | ✅ |
+| TC102 | "he is happy." | ❌ Error: First letter must be capitalized | ✅ |
+| TC103 | "she is a student." | ❌ Error: First letter must be capitalized | ✅ |
+| TC104 | "it is cool." | ❌ Error: First letter must be capitalized | ✅ |
+| TC105 | "we are friends." | ❌ Error: First letter must be capitalized | ✅ |
+| TC106 | "they are students." | ❌ Error: First letter must be capitalized | ✅ |
+| TC107 | "are you ready?" | ❌ Error: First letter must be capitalized | ✅ |
+| TC108 | "is the cat brown?" | ❌ Error: First letter must be capitalized | ✅ |
+
 #### Frases Sin Verbo TO BE
 
 | ID | Frase de Prueba | Resultado Esperado | Estado |
@@ -206,13 +221,14 @@
 | Errores de Concordancia | 10 | 10 | 0 | 100% |
 | Errores de Estructura | 7 | 7 | 0 | 100% |
 | Errores de Puntuación | 4 | 4 | 0 | 100% |
+| Errores de Capitalización | 10 | 10 | 0 | 100% |
 | Sin Verbo TO BE | 5 | 5 | 0 | 100% |
-| **TOTAL** | **99** | **99** | **0** | **100%** |
+| **TOTAL** | **109** | **109** | **0** | **100%** |
 
 ### Análisis de Cobertura
 
-- **Casos Válidos**: 73 casos (73.7%)
-- **Casos Inválidos**: 26 casos (26.3%)
+- **Casos Válidos**: 73 casos (67.0%)
+- **Casos Inválidos**: 36 casos (33.0%)
 - **Cobertura de Patrones**: 100%
 - **Cobertura de Errores**: 100%
 
@@ -278,7 +294,9 @@
 | Caracteres especiales | "I @m a teacher." | Error: Missing verb TO BE | ✅ |
 | Números | "I am 25 years old." | Válido (si contiene TO BE) | ✅ |
 | Múltiples espacios | "I   am   a   teacher." | Válido | ✅ |
-| Mayúsculas/minúsculas | "i AM a TEACHER." | Válido | ✅ |
+| Mayúsculas/minúsculas | "I AM a TEACHER." | Válido | ✅ |
+| Primera letra minúscula | "i am a teacher." | Error: First letter must be capitalized | ✅ |
+| Solo primera letra minúscula | "i AM A TEACHER." | Error: First letter must be capitalized | ✅ |
 
 ### Límites del Sistema
 
