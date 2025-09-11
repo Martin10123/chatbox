@@ -63,6 +63,7 @@ Implementar un sistema inteligente que utilice expresiones regulares para valida
 - ✅ **Reconocimiento de Sujetos**: Pronombres personales, nombres propios, sustantivos con artículos
 - ✅ **Validación de Verbos**: Formas del verbo TO BE en presente y pasado
 - ✅ **Estructuras Gramaticales**: Afirmativas, negativas e interrogativas
+- ✅ **Validación de Capitalización**: Verificación de primera letra mayúscula
 - ✅ **Detección de Errores**: Concordancia sujeto-verbo y estructura gramatical
 - ✅ **Retroalimentación Inteligente**: Mensajes específicos de error y éxito
 - ✅ **Interfaz Conversacional**: Chat interactivo con múltiples sesiones
